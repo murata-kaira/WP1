@@ -178,8 +178,8 @@ void GameScene::Update() {
 		float arrowY = kScreenCenterY - std::sin(aimAngle) * kArrowDistance; // Y軸は下向きが正なので反転
 		aimArrowSprite_->SetPosition({arrowX, arrowY});
 
-		// 矢印を照準方向に回転（上向きが基準なので90度調整）
-		aimArrowSprite_->SetRotation(-aimAngle + std::numbers::pi_v<float> / 2.0f);
+		// 矢印を照準方向に回転（画像自体が右向きを基準としているため角度調整は不要）
+		aimArrowSprite_->SetRotation(-aimAngle);
 		// 矢印のパルスアニメーション
 		arrowAnimationTimer_ += kArrowAnimationSpeed;
 
