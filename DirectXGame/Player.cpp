@@ -310,7 +310,13 @@ void Player::CheckMapLanding(const CollisionMapInfo& info) {
 
 			onGround_ = true;
 			velocity_.x *= (1.0f - kAttenuationLanding);
-			velocity_.y = 0.0f;
+
+			// 地面に着地した際、速度が閾値を超えていれば反発（バウンド）させる
+			if (std::abs(velocity_.y) > kBounceVelocityThreshold) {
+				velocity_.y = -velocity_.y * kBounceRestitution;
+			} else {
+				velocity_.y = 0.0f;
+			}
 		}
 	}
 }

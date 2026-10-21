@@ -165,4 +165,7 @@ private:
 	static inline const float kGroundSearchHeight = 0.1f;
 
 	static inline const float kAttenuationWall = 0.5f;
+
+	static inline const float kBounceRestitution = 0.5f;      //地面に着地した時の反発係数
+	static inline const float kBounceVelocityThreshold = 0.05f; //反発を止めて静止判定にする速度の閾値
 };
