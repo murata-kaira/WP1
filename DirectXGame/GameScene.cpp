@@ -173,9 +173,16 @@ void GameScene::Update() {
 		// プレイヤーの照準角度を取得
 		float aimAngle = player_->GetAimAngle();
 
-		// 照準方向に矢印を配置（画面中央から指定距離）
-		float arrowX = kScreenCenterX + std::cos(aimAngle) * kArrowDistance;
-		float arrowY = kScreenCenterY - std::sin(aimAngle) * kArrowDistance; // Y軸は下向きが正なので反転
+		// プレイヤーのワールド座標を画面座標に変換（矢印をプレイヤーの動きに追従させる）
+		Vector3 playerWorldPos = player_->GetWorldPosition();
+		Vector3 playerViewPos = KamataEngine::MathUtility::TransformCoord(playerWorldPos, camera_.matView);
+		Vector3 playerClipPos = KamataEngine::MathUtility::TransformCoord(playerViewPos, camera_.matProjection);
+		float playerScreenX = (playerClipPos.x * 0.5f + 0.5f) * (kScreenCenterX * 2.0f);
+		float playerScreenY = (-playerClipPos.y * 0.5f + 0.5f) * (kScreenCenterY * 2.0f);
+
+		// 照準方向に矢印を配置（プレイヤーの画面上の位置から指定距離）
+		float arrowX = playerScreenX + std::cos(aimAngle) * kArrowDistance;
+		float arrowY = playerScreenY - std::sin(aimAngle) * kArrowDistance; // Y軸は下向きが正なので反転
 		aimArrowSprite_->SetPosition({arrowX, arrowY});
 
 		// 矢印を照準方向に回転（上向きが基準なので90度調整）

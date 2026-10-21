@@ -72,9 +72,9 @@ class GameScene {
 	KamataEngine::Sprite* aimArrowSprite_ = nullptr;
 	
 	// 矢印表示用の定数
-	static inline const float kScreenCenterX = 640.0f; // 画面中央X (1280/2)
-	static inline const float kScreenCenterY = 360.0f; // 画面中央Y (720/2)
-	static inline const float kArrowDistance = 80.0f;  // 画面中央からの矢印距離
+	static inline const float kScreenCenterX = 640.0f; // 画面幅の半分 (1280/2)
+	static inline const float kScreenCenterY = 360.0f; // 画面高さの半分 (720/2)
+	static inline const float kArrowDistance = 80.0f;  // プレイヤーの画面上位置からの矢印距離
 	static inline const float kArrowSize = 32.0f;      // 矢印のサイズ
 
 	// 矢印アニメーション用の定数
