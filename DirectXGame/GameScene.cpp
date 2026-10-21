@@ -24,6 +24,13 @@ GameScene::~GameScene() {
 	delete sprite_;
 	delete aimArrowSprite_;
 
+	// 上下に動く邪魔な敵
+	for (Enemy* enemy : enemies_) {
+		delete enemy;
+	}
+	enemies_.clear();
+	delete modelEnemy_;
+
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 			delete worldTransformBlock;
@@ -92,6 +99,18 @@ void GameScene::Initialize() {
 	goal_ = new Goal();
 	goal_->Initialize(modelGoal_, &camera_, goalPosition);
 
+	// 上下に動く邪魔な敵を配置
+	modelEnemy_ = Model::CreateFromOBJ("enemy", true);
+
+	const uint32_t enemyXIndices[] = {38, 58};
+	for (uint32_t xIndex : enemyXIndices) {
+		Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(xIndex, 9);
+		Enemy* enemy = new Enemy();
+		enemy->Initialize(modelEnemy_, &camera_, enemyPosition);
+		enemy->SetMapChipField(mapChipField_);
+		enemies_.push_back(enemy);
+	}
+
 	// ファイルからテクスチャを読み込む
 	textureHandle_ = TextureManager::Load("sirusi.png");
 	sprite_ = Sprite::Create(textureHandle_, {playerPosition.x, playerPosition.y});
@@ -120,6 +139,10 @@ void GameScene::Update() {
 
 	if (goal_) {
 		goal_->Update();
+	}
+
+	for (Enemy* enemy : enemies_) {
+		enemy->Update();
 	}
 
 
@@ -218,7 +241,14 @@ void GameScene::Draw() {
 		goal_->Draw();
 	}
     ///////////////////////////////////////
-	
+
+	///////////////////////////////////////
+	// 上下に動く邪魔な敵の描画
+	for (Enemy* enemy : enemies_) {
+		enemy->Draw();
+	}
+	///////////////////////////////////////
+
 
 	if (deathParticles_) {
 		deathParticles_->Draw();
@@ -300,6 +330,17 @@ void GameScene::CheckAllCollisions() {
 		// プレイヤーがゴールに到達したか確認する
 		if (distanceSquared < radiusSquared) {
 			phase_ = Phase::kGoalReached;
+		}
+	}
+
+	// 上下に動く邪魔な敵との当たり判定をチェック
+	if (phase_ == Phase::kPlay) {
+		for (Enemy* enemy : enemies_) {
+			AABB aabb2 = enemy->GetAABB();
+			if (IsCollision(aabb1, aabb2)) {
+				player_->OnCollision(enemy);
+				enemy->OnCollision(player_);
+			}
 		}
 	}
 

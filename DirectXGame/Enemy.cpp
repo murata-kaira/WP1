@@ -19,20 +19,19 @@ void Enemy::Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera,
 
 	worldTransform_.translation_ = position;
 
-	worldTransform_.rotation_.y = -std::numbers::pi_v<float> / 2.0f;
+	basePosition_ = position;
 
-	velocity_ = {-kWalkSpeed, 0, 0};
+	worldTransform_.rotation_.y = -std::numbers::pi_v<float> / 2.0f;
 
 	walkTimer_ = 0.0f;
 }
 
 void Enemy::Update() {
 
-	worldTransform_.translation_ += velocity_;
-
 	walkTimer_ += 1.0f / 60.0f;
 
-	worldTransform_.rotation_.x = std::sin(walkTimer_ * 5.0f);
+	// 上下に往復移動する障害物敵
+	worldTransform_.translation_.y = basePosition_.y + std::sin(walkTimer_ * kMoveSpeed) * kMoveAmplitude;
 
 	worldTransform_.matWorld_ = MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
 

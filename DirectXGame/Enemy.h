@@ -31,12 +31,13 @@ private:
 
 	MapChipField* mapChipField_ = nullptr;
 
-	KamataEngine::Vector3 velocity_ = {};
-
 	float walkTimer_ = 0.0f;
-
-	static inline const float kWalkSpeed = 0.05f;
 
 	static inline const float kWidth = 0.8f;
 	static inline const float kHeight = 0.8f;
+
+	// 上下移動用
+	KamataEngine::Vector3 basePosition_ = {}; // 上下移動の中心座標
+	static inline const float kMoveAmplitude = 2.0f;   // 上下移動の振れ幅
+	static inline const float kMoveSpeed = 2.0f;       // 上下移動の速さ
 };

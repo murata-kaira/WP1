@@ -1,6 +1,7 @@
 #pragma once
 #include "CameraController.h"
 #include "DeathParticles.h"
+#include "Enemy.h"
 #include "KamataEngine.h"
 #include "MapChipField.h"
 #include "Player.h"
@@ -48,6 +49,10 @@ class GameScene {
 	DeathParticles* deathParticles_ = nullptr;
 
 	Goal* goal_ = nullptr;
+
+	// 上下に動く邪魔な敵
+	KamataEngine::Model* modelEnemy_ = nullptr;
+	std::vector<Enemy*> enemies_;
 
 	enum class Phase {
 		kPlay,
