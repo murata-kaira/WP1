@@ -82,7 +82,7 @@ private:
 	// ゴルフゲームの状態
 	State state_ = State::Idle;// 現在の状態
 	float chargePower_ = 0.0f; //現在のチャージパワー 
-	float aimAngle_ = 0.785f;  //照準方向（初期値は斜め45度）
+	float aimAngle_ = 0.0f;    //照準方向（初期値は右向き）
 	int shotCount_ = 0;        //ショット数
 
 	//ゴルフゲーム用定数
