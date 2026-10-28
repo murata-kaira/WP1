@@ -6,11 +6,34 @@ using namespace MathUtility;
 
 void CameraController::Initialize() { camera_.Initialize(); }
 
+void CameraController::SetViewingGoal(bool viewingGoal) {
+	if (viewingGoal && !isViewingGoal_) {
+		// ゴール確認モードに入った瞬間に手動移動オフセットをリセット
+		goalViewManualOffset_ = {};
+	}
+	isViewingGoal_ = viewingGoal;
+}
+
 void CameraController::Update() {
 
 	if (isViewingGoal_) {
-		// ゴール確認中はカメラをゴール位置へなめらかに移動させる
-		const Vector3 goalCameraPosition = goalPosition_ + target0ffset_;
+		// WASDキーでゴール確認中のカメラを手動で動かせるようにする
+		Input* input = Input::GetInstance();
+		if (input->PushKey(DIK_A)) {
+			goalViewManualOffset_.x -= kGoalViewManualMoveSpeed;
+		}
+		if (input->PushKey(DIK_D)) {
+			goalViewManualOffset_.x += kGoalViewManualMoveSpeed;
+		}
+		if (input->PushKey(DIK_W)) {
+			goalViewManualOffset_.y += kGoalViewManualMoveSpeed;
+		}
+		if (input->PushKey(DIK_S)) {
+			goalViewManualOffset_.y -= kGoalViewManualMoveSpeed;
+		}
+
+		// ゴール確認中はカメラをゴール位置（＋手動移動分）へなめらかに移動させる
+		const Vector3 goalCameraPosition = goalPosition_ + target0ffset_ + goalViewManualOffset_;
 		camera_.translation_.x = Lerp(camera_.translation_.x, goalCameraPosition.x, kGoalViewInterpolationRate);
 		camera_.translation_.y = Lerp(camera_.translation_.y, goalCameraPosition.y, kGoalViewInterpolationRate);
 		camera_.translation_.z = Lerp(camera_.translation_.z, goalCameraPosition.z, kGoalViewInterpolationRate);

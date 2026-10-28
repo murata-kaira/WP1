@@ -27,7 +27,7 @@ public:
 
 	// ゴール確認用の視点移動
 	void SetGoalPosition(const KamataEngine::Vector3& goalPosition) { goalPosition_ = goalPosition; }
-	void SetViewingGoal(bool viewingGoal) { isViewingGoal_ = viewingGoal; }
+	void SetViewingGoal(bool viewingGoal);
 	bool IsViewingGoal() const { return isViewingGoal_; }
 
 private:
@@ -54,5 +54,7 @@ private:
 	// ゴール確認用の視点移動
 	KamataEngine::Vector3 goalPosition_ = {};
 	bool isViewingGoal_ = false;
+	KamataEngine::Vector3 goalViewManualOffset_ = {}; // 手動移動分のオフセット
 	static inline const float kGoalViewInterpolationRate = 0.08f; // ゴール確認時のカメラ移動速度
+	static inline const float kGoalViewManualMoveSpeed = 0.3f;    // 手動移動の速度
 };
