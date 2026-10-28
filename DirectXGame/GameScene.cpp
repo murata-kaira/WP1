@@ -154,7 +154,6 @@ void GameScene::Update() {
 	fade_->Update();
 
 	player_->Update();
-	debugCamera_->Update();
 	cameraController_->Update();
 
 	if (goal_) {
