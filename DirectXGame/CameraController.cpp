@@ -8,6 +8,16 @@ void CameraController::Initialize() { camera_.Initialize(); }
 
 void CameraController::Update() {
 
+	if (isViewingGoal_) {
+		// ゴール確認中はカメラをゴール位置へなめらかに移動させる
+		const Vector3 goalCameraPosition = goalPosition_ + target0ffset_;
+		camera_.translation_.x = Lerp(camera_.translation_.x, goalCameraPosition.x, kGoalViewInterpolationRate);
+		camera_.translation_.y = Lerp(camera_.translation_.y, goalCameraPosition.y, kGoalViewInterpolationRate);
+		camera_.translation_.z = Lerp(camera_.translation_.z, goalCameraPosition.z, kGoalViewInterpolationRate);
+		camera_.UpdateMatrix();
+		return;
+	}
+
 	const WorldTransform& targetWorldTransform = target_->GetWorldTransform();
 
 	targetPosition_ = targetWorldTransform.translation_ + target0ffset_;

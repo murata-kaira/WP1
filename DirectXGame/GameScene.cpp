@@ -103,6 +103,9 @@ void GameScene::Initialize() {
 	goal_ = new Goal();
 	goal_->Initialize(modelGoal_, &camera_, goalPosition);
 
+	// カメラコントローラーにゴール位置を伝える（ゴール確認用の視点移動で使用）
+	cameraController_->SetGoalPosition(goalPosition);
+
 	// 上下に動く邪魔な敵を配置
 	modelEnemy_ = Model::CreateFromOBJ("enemy", true);
 
@@ -154,6 +157,12 @@ void GameScene::Update() {
 	fade_->Update();
 
 	player_->Update();
+
+	// ゴール確認用の視点移動（照準調整中にTABキーを押している間、カメラをゴールに向ける）
+	Player::State currentState = player_ ? player_->GetState() : Player::State::Moving;
+	bool canViewGoal = player_ && (currentState == Player::State::Idle || currentState == Player::State::Charging);
+	cameraController_->SetViewingGoal(canViewGoal && Input::GetInstance()->PushKey(DIK_TAB));
+
 	cameraController_->Update();
 
 	if (goal_) {
@@ -209,7 +218,6 @@ void GameScene::Update() {
 	///////////////////////////////////////
 	
 	// 照準調整中に矢印の位置を更新
-	Player::State currentState = player_ ? player_->GetState() : Player::State::Moving;
 	shouldShowArrows_ = player_ && (currentState == Player::State::Idle || currentState == Player::State::Charging);
 	if (shouldShowArrows_) {
 		// プレイヤーの照準角度を取得

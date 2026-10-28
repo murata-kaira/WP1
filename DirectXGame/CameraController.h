@@ -25,6 +25,11 @@ public:
 
 	const KamataEngine::Camera& GetViewProjection() const { return camera_; }
 
+	// ゴール確認用の視点移動
+	void SetGoalPosition(const KamataEngine::Vector3& goalPosition) { goalPosition_ = goalPosition; }
+	void SetViewingGoal(bool viewingGoal) { isViewingGoal_ = viewingGoal; }
+	bool IsViewingGoal() const { return isViewingGoal_; }
+
 private:
 	KamataEngine::WorldTransform worldTransform_;
 
@@ -45,4 +50,9 @@ private:
 	Rect targetMargin = {-9.0f, 9.0f, -5.0f, 5.0f};
 
 	Rect movableArea_ = {0, 100, 0, 100};
+
+	// ゴール確認用の視点移動
+	KamataEngine::Vector3 goalPosition_ = {};
+	bool isViewingGoal_ = false;
+	static inline const float kGoalViewInterpolationRate = 0.08f; // ゴール確認時のカメラ移動速度
 };
