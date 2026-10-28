@@ -92,6 +92,21 @@ class GameScene {
 	bool shouldShowArrows_ = false;
 	float arrowAnimationTimer_ = 0.0f; // アニメーションタイマー
 
+	// チャージゲージ用テクスチャハンドル
+	uint32_t whiteTextureHandle_ = 0;
+	// チャージゲージのスプライト（背景と中身）
+	KamataEngine::Sprite* chargeGaugeBackSprite_ = nullptr;
+	KamataEngine::Sprite* chargeGaugeFillSprite_ = nullptr;
+
+	// チャージゲージ表示用の定数
+	static inline const float kChargeGaugeX = 490.0f;      // ゲージの表示位置X
+	static inline const float kChargeGaugeY = 650.0f;      // ゲージの表示位置Y
+	static inline const float kChargeGaugeWidth = 300.0f;  // ゲージの幅（最大チャージ時）
+	static inline const float kChargeGaugeHeight = 24.0f;  // ゲージの高さ
+
+	// チャージゲージの表示状態
+	bool shouldShowChargeGauge_ = false;
+
 
 public:
 	~GameScene();

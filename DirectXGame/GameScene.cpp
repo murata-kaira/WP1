@@ -31,6 +31,10 @@ GameScene::~GameScene() {
 	enemies_.clear();
 	delete modelEnemy_;
 
+	//チャージゲージ
+	delete chargeGaugeBackSprite_;
+	delete chargeGaugeFillSprite_;
+
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 			delete worldTransformBlock;
@@ -126,6 +130,22 @@ void GameScene::Initialize() {
 	shouldShowArrows_ = false;
 	arrowAnimationTimer_ = 0.0f;
 
+	// チャージゲージ用のスプライトを作成（白テクスチャを色付けして使用）
+	whiteTextureHandle_ = TextureManager::Load("white1x1.png");
+
+	// 背景（枠）となる暗い色のゲージ
+	chargeGaugeBackSprite_ = Sprite::Create(whiteTextureHandle_, {kChargeGaugeX, kChargeGaugeY});
+	chargeGaugeBackSprite_->SetSize({kChargeGaugeWidth, kChargeGaugeHeight});
+	chargeGaugeBackSprite_->SetColor({0.2f, 0.2f, 0.2f, 0.8f});
+
+	// チャージ量に応じて伸び縮みする中身のゲージ
+	chargeGaugeFillSprite_ = Sprite::Create(whiteTextureHandle_, {kChargeGaugeX, kChargeGaugeY});
+	chargeGaugeFillSprite_->SetSize({0.0f, kChargeGaugeHeight});
+	chargeGaugeFillSprite_->SetColor({1.0f, 0.3f, 0.2f, 0.9f});
+
+	// チャージゲージの表示状態を初期化
+	shouldShowChargeGauge_ = false;
+
 	///////////////////////////////////////
 }
 
@@ -219,6 +239,13 @@ void GameScene::Update() {
 
 	}
 
+	// チャージ中はチャージゲージを表示し、チャージ量に応じて中身の幅を更新
+	shouldShowChargeGauge_ = player_ && currentState == Player::State::Charging;
+	if (shouldShowChargeGauge_) {
+		float chargePower = player_->GetChargePower();
+		chargeGaugeFillSprite_->SetSize({kChargeGaugeWidth * chargePower, kChargeGaugeHeight});
+	}
+
 	///////////////////////////////////////
 	
 
@@ -274,6 +301,11 @@ void GameScene::Draw() {
 	// 照準調整中に矢印を描画
 	if (shouldShowArrows_) {
 		aimArrowSprite_->Draw();
+	}
+	// チャージ中にチャージゲージを描画
+	if (shouldShowChargeGauge_) {
+		chargeGaugeBackSprite_->Draw();
+		chargeGaugeFillSprite_->Draw();
 	}
 	Sprite::PostDraw();
 
